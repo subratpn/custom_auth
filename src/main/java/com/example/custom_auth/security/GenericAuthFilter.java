@@ -4,6 +4,7 @@ import com.example.custom_auth.model.AppUser;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
@@ -21,6 +22,7 @@ public class GenericAuthFilter extends OncePerRequestFilter {
         //TODO:Write Logic Here to Validate JWT TOKEN
         //once verified that token is valid, then set user info in SecurityContext
         UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(new AppUser(), null, null);
+        usernamePasswordAuthenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(httpServletRequest));
         SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
         //else reject request with 401
         filterChain.doFilter(httpServletRequest, httpServletResponse);
